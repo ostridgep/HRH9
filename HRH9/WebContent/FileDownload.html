@@ -1,0 +1,112 @@
+<!DOCTYPE html> 
+2 <html> 
+3   <head> 
+4   <title></title> 
+5   
+6 <!-- Android 
+7 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" /> 
+8 <meta charset="utf-8">--> 
+9   
+10 <!-- iPad/iPhone specific css below, add after your main css > 
+11 <link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="/ipad.css" type="text/css" /> 
+12 <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="/iphone.css" type="text/css" /> 
+13 --> 
+14 <!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www directory and include it here --> 
+15 <script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script> 
+16     <script type="text/javascript"> 
+17   
+18   
+19 // If you want to prevent dragging, uncomment this section 
+20 /* 
+21 function preventBehavior(e)  
+22 {  
+23       e.preventDefault();  
+24     }; 
+25 document.addEventListener("touchmove", preventBehavior, false); 
+26 */ 
+27   
+28 /* If you are supporting your own protocol, the var invokeString will contain any arguments to the app launch. 
+29 see http://iphonedevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html 
+30 for more details -jm */ 
+31 /* 
+32 function handleOpenURL(url) 
+33 { 
+34 // TODO: do something with the url passed in. 
+35 } 
+36 */ 
+37   
+38 function onBodyLoad() 
+39 { 
+40 document.addEventListener("deviceready", onDeviceReady, false); 
+41 } 
+42   
+43     function downloadFile(){ 
+44         window.requestFileSystem( 
+45                      LocalFileSystem.PERSISTENT, 0,  
+46                      function onFileSystemSuccess(fileSystem) { 
+47                      fileSystem.root.getFile( 
+48                                  "dummy.html", {create: true, exclusive: false},  
+49                                  function gotFileEntry(fileEntry){ 
+50                                  var sPath = fileEntry.fullPath.replace("dummy.html",""); 
+51                                  var fileTransfer = new FileTransfer(); 
+52                                  fileEntry.remove(); 
+53   
+54                                  fileTransfer.download( 
+55                                            "http://www.w3.org/2011/web-apps-ws/papers/Nitobi.pdf", 
+56                                            sPath + "theFile.pdf", 
+57                                            function(theFile) { 
+58                                            console.log("download complete: " + theFile.toURI()); 
+59                                            showLink(theFile.toURI()); 
+60                                            }, 
+61                                            function(error) { 
+62                                            console.log("download error source " + error.source); 
+63                                            console.log("download error target " + error.target); 
+64                                            console.log("upload error code: " + error.code); 
+65                                            } 
+66                                            ); 
+67                                  },  
+68                                  fail); 
+69                      },  
+70                      fail); 
+71   
+72     } 
+73   
+74     function showLink(url){ 
+75         alert(url); 
+76         var divEl = document.getElementById("ready"); 
+77         var aElem = document.createElement("a"); 
+78         aElem.setAttribute("target", "_blank"); 
+79         aElem.setAttribute("href", url); 
+80         aElem.appendChild(document.createTextNode("Ready! Click To Open.")) 
+81         divEl.appendChild(aElem); 
+82   
+83     } 
+84   
+85   
+86     function fail(evt) { 
+87         console.log(evt.target.error.code); 
+88     } 
+89   
+90 /* When this function is called, PhoneGap has been initialized and is ready to roll */ 
+91 /* If you are supporting your own protocol, the var invokeString will contain any arguments to the app launch. 
+92 see http://iphonedevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html 
+93 for more details -jm */ 
+94 function onDeviceReady() 
+95 { 
+96 // do your thing! 
+97         downloadFile(); 
+98 } 
+99   
+100     </script> 
+101   </head> 
+102   <body onload="onBodyLoad()"> 
+103 <h1>Hey, it's PhoneGap!</h1> 
+104 <p>Don't know how to get started? Check out <em><a target="_blank" href="/http://www.phonegap.com/start">PhoneGap Start</a><em> 
+105 </p> 
+106 <br /> 
+107     <p> 
+108         DOWNLOADING FILE...<br /> 
+109         <span id="ready"></span> 
+110     </p> 
+111   </body> 
+112 </html> 
